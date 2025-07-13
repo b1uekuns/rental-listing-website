@@ -1,0 +1,72 @@
+<%- include('../partials/admin_header') %>
+
+<div class="admin-layout">
+  <%- include('../partials/admin_sidebar') %>
+
+  <div class="admin-content">
+    <h1>Quản lý bình luận</h1>
+
+    <div class="admin-content-wrapper">
+      <% if (locals.success) { %>
+      <div class="alert alert-success"><%= locals.success %></div>
+      <% } %> <% if (locals.error) { %>
+      <div class="alert alert-danger"><%= locals.error %></div>
+      <% } %>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Người dùng</th>
+              <th>Tin đăng</th>
+              <th>Nội dung</th>
+              <th>Đánh giá</th>
+              <th>Ngày</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% comments.forEach(c => { %>
+            <tr>
+              <td><%= c.full_name %></td>
+              <td>
+                <a href="/admin/listings/<%= c.listing_id %>" class="text-blue">
+                  <%= c.listing_title %>
+                </a>
+              </td>
+              <td class="max-width-300">
+                <%= c.content %>
+              </td>
+              <td>
+                <% if (c.rating) { %>
+                <span class="text-yellow">
+                  <% for(let i = 1; i <= 5; i++) { %> <%= i <= c.rating ? '★' :
+                  '☆' %> <% } %>
+                </span>
+                <% } else { %>
+                <span class="text-gray">Chưa đánh giá</span>
+                <% } %>
+              </td>
+              <td><%= new Date(c.created_at).toLocaleString('vi-VN') %></td>
+              <td>
+                <form
+                  action="/admin/comments/<%= c.id %>/delete"
+                  method="POST"
+                  class="inline-form"
+                  onsubmit="return confirm('Xác nhận xóa bình luận này?');"
+                >
+                  <button type="submit" class="btn btn-danger btn-small">
+                    Xóa
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin_footer') %>

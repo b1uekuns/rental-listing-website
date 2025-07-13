@@ -1,0 +1,131 @@
+
+<%- include('../partials/header')%>
+
+<main>
+  <div class="container" style="margin-top: 50px">
+    <h2
+      style="
+        text-align: center;
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+      "
+    >
+      Danh sách tin đăng
+    </h2>
+
+    <!-- Form tìm kiếm -->
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+      <form action="/listings" method="GET" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
+        <div style="flex: 1; min-width: 150px;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Quận/Huyện</label>
+          <select name="district" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">Tất cả</option>
+            <% districts.forEach(district => { %>
+            <option value="<%= district.id %>" <%= (searchParams && searchParams.district == district.id) ? 'selected' : '' %>>
+              <%= district.name %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 150px;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Loại hình</label>
+          <select name="property_type" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">Tất cả</option>
+            <option value="phong_tro" <%= (searchParams && searchParams.property_type === 'phong_tro') ? 'selected' : '' %>>Phòng trọ</option>
+            <option value="nha_nguyen_can" <%= (searchParams && searchParams.property_type === 'nha_nguyen_can') ? 'selected' : '' %>>Nhà nguyên căn</option>
+            <option value="can_ho" <%= (searchParams && searchParams.property_type === 'can_ho') ? 'selected' : '' %>>Căn hộ</option>
+            <option value="o_ghep" <%= (searchParams && searchParams.property_type === 'o_ghep') ? 'selected' : '' %>>Ở ghép</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 150px;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Khoảng giá</label>
+          <select name="price_range" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">Tất cả</option>
+            <option value="0-2000000" <%= (searchParams && searchParams.price_range === '0-2000000') ? 'selected' : '' %>>Dưới 2 triệu</option>
+            <option value="2000000-5000000" <%= (searchParams && searchParams.price_range === '2000000-5000000') ? 'selected' : '' %>>2 - 5 triệu</option>
+            <option value="5000000-10000000" <%= (searchParams && searchParams.price_range === '5000000-10000000') ? 'selected' : '' %>>5 - 10 triệu</option>
+            <option value="10000000-20000000" <%= (searchParams && searchParams.price_range === '10000000-20000000') ? 'selected' : '' %>>10 - 20 triệu</option>
+            <option value="20000000-999999999" <%= (searchParams && searchParams.price_range === '20000000-999999999') ? 'selected' : '' %>>Trên 20 triệu</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 120px;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Diện tích tối thiểu</label>
+          <input type="number" name="area" placeholder="m²" min="0"
+                 value="<%= (searchParams && searchParams.area) ? searchParams.area : '' %>"
+                 style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+
+        <div style="flex: 1; min-width: 150px;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Từ khóa</label>
+          <input type="text" name="keyword" placeholder="Tìm theo tiêu đề, mô tả..."
+                 value="<%= (searchParams && searchParams.keyword) ? searchParams.keyword : '' %>"
+                 style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="submit" style="padding: 0.5rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Tìm kiếm
+          </button>
+          <a href="/listings" style="padding: 0.5rem 1rem; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+            Xóa bộ lọc
+          </a>
+        </div>
+      </form>
+    </div>
+    <% if (locals.error) { %>
+    <div class="alert alert-danger"><%= locals.error %></div>
+    <% } else if (locals.success) { %>
+    <div class="alert alert-success"><%= locals.success %></div>
+    <% } %> <% if (listings && listings.length > 0) { %>
+    <div class="hot-listings-grid">
+      <% listings.forEach(listing => { %>
+      <div class="hot-listing-card">
+        <% let images = []; if (Array.isArray(listing.images_urls)) { images =
+        listing.images_urls; } else { try { images =
+        JSON.parse(listing.images_urls || '[]'); } catch(e) { images = []; } }
+        %>
+        <div class="listing-image">
+          <img
+            src="<%= images[0] || '/images/no-image.png' %>"
+            alt="<%= listing.title %>"
+          />
+        </div>
+        <div class="listing-content">
+          <h3 class="listing-title">
+            <a href="/listings/<%= listing.id %>"><%= listing.title %></a>
+          </h3>
+          <div class="price-rating">
+            <div class="price">
+              <%= Math.round(listing.price).toLocaleString('vi-VN') %> VNĐ/tháng
+            </div>
+            <div class="view-count">
+              👁️ <%= listing.view_count || 0 %>
+            </div>
+          </div>
+          <div class="property-details">
+            <span class="property-type">
+              <% if (listing.property_type === 'phong_tro') { %>Phòng trọ
+              <% } else if (listing.property_type === 'nha_nguyen_can') { %>Nhà nguyên căn
+              <% } else if (listing.property_type === 'can_ho') { %>Căn hộ
+              <% } else if (listing.property_type === 'o_ghep') { %>Ở ghép
+              <% } else { %><%= listing.property_type %><% } %>
+            </span>
+            <span class="area"><%= listing.area %>m²</span>
+          </div>
+          <div class="location">
+            <span class="location-icon">📍</span>
+            <span><%= listing.district_name %></span>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <p style="text-align: center">Chưa có tin đăng nào.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

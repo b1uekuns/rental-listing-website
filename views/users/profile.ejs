@@ -1,0 +1,111 @@
+<%- include('../partials/header') %>
+
+<main>
+<div class="container profile-container">
+  <!-- Bên trái: Form chỉnh sửa thông tin -->
+  <div class="profile-main">
+    <h1 style="margin-bottom: 1.5rem; text-align: center;">Thông tin cá nhân</h1>
+
+    <!-- Hiển thị thông báo lỗi -->
+    <% if (locals.error) { %>
+      <div class="alert alert-danger" style="margin-bottom: 1rem;">
+        <%= locals.error %>
+      </div>
+    <% } %>
+
+    <!-- Hiển thị thông báo thành công -->
+    <% if (locals.success) { %>
+      <div class="alert alert-success" style="margin-bottom: 1rem;">
+        <%= locals.success %>
+      </div>
+    <% } %>
+
+    <form action="/users/profile" method="POST" enctype="multipart/form-data">
+      <div style="text-align: center; margin-bottom: 1.5rem">
+        <img
+          src="<%= user.avatar_url || '/images/default-avatar.png' %>"
+          alt="avatar"
+          style="
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            object-fit: cover;
+          "
+        />
+        <div>
+          <label for="avatar">Đổi ảnh đại diện:</label>
+          <input type="file" name="avatar" id="avatar" accept="image/*" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="full_name">Họ tên</label>
+        <input
+          type="text"
+          name="full_name"
+          id="full_name"
+          value="<%= user.full_name %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value="<%= user.email %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="phone_number">Số điện thoại</label>
+        <input
+          type="text"
+          name="phone_number"
+          id="phone_number"
+          value="<%= user.phone_number %>"
+          required
+        />
+      </div>
+      <button type="submit" class="btn">Cập nhật thông tin</button>
+    </form>
+  </div>
+  <!-- Bên phải: Sidebar -->
+  <div class="profile-sidebar">
+    <div class="sidebar-card">
+      <h3 style="margin-bottom: 1rem">Tài khoản</h3>
+      <ul style="list-style: none; padding: 0">
+        <li style="margin-bottom: 1rem">
+          <a
+            href="/users/profile"
+            style="color: #00bfa6; text-decoration: none; font-weight: bold"
+            >Thông tin cá nhân</a
+          >
+        </li>
+        <li style="margin-bottom: 1rem">
+          <a href="/users/listings" style="color: #333; text-decoration: none"
+            >Tin đã đăng</a
+          >
+        </li>
+        <li>
+          <a href="/users/saved" style="color: #333; text-decoration: none"
+            >Tin đã lưu</a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-card">
+      <h3 style="margin-bottom: 1rem">Hành động nhanh</h3>
+      <a
+        href="/listings/create"
+        class="btn"
+        style="width: 100%; display: block"
+        >📝 Đăng tin mới</a
+      >
+    </div>
+  </div>
+</div>
+</main>
+
+<%- include('../partials/footer') %>

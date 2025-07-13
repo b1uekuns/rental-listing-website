@@ -1,0 +1,89 @@
+<%- include('../partials/header') %>
+
+<main>
+  <div class="container" style="margin-top: 50px">
+    <h2
+      style="
+        text-align: center;
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+      "
+    >
+      Tin đã lưu
+    </h2>
+
+    <!-- Hiển thị thông báo lỗi -->
+    <% if (locals.error) { %>
+    <div class="alert alert-danger" style="margin-bottom: 1rem;">
+      <%= locals.error %>
+    </div>
+    <% } %>
+
+    <!-- Hiển thị thông báo thành công -->
+    <% if (locals.success) { %>
+    <div class="alert alert-success" style="margin-bottom: 1rem;">
+      <%= locals.success %>
+    </div>
+    <% } %>
+
+    <% if (listings.length === 0) { %>
+    <p style="text-align: center">Bạn chưa lưu tin nào.</p>
+    <% } else { %>
+    <div class="hot-listings-grid">
+      <% listings.forEach(listing => { %>
+      <div class="hot-listing-card">
+        <% let images = []; if (Array.isArray(listing.images_urls)) { images =
+        listing.images_urls; } else { try { images =
+        JSON.parse(listing.images_urls || '[]'); } catch(e) { images = []; } }
+        %>
+        <div class="listing-image">
+          <img
+            src="<%= images[0] || '/images/no-image.png' %>"
+            alt="<%= listing.title %>"
+          />
+        </div>
+        <div class="listing-content">
+          <h3 class="listing-title">
+            <a href="/listings/<%= listing.id %>"><%= listing.title %></a>
+          </h3>
+
+          <div class="price-rating">
+            <div class="price">
+              <%= Math.round(listing.price).toLocaleString('vi-VN') %> VNĐ/tháng
+            </div>
+            <div class="view-count">
+              👁️ <%= listing.view_count || 0 %>
+            </div>
+          </div>
+
+          <div class="property-details">
+            <span class="property-type">
+              <% if (listing.property_type === 'phong_tro') { %>Phòng trọ
+              <% } else if (listing.property_type === 'nha_nguyen_can') { %>Nhà nguyên căn
+              <% } else if (listing.property_type === 'can_ho') { %>Căn hộ
+              <% } else if (listing.property_type === 'o_ghep') { %>Ở ghép
+              <% } else { %><%= listing.property_type %><% } %>
+            </span>
+            <span class="area"><%= listing.area %>m²</span>
+          </div>
+          <div class="location">
+            <span class="location-icon">📍</span>
+            <span><%= listing.district_name %></span>
+          </div>
+
+          <div style="display: flex; justify-content: center; margin-top: 1rem;">
+            <form
+              action="/listings/<%= listing.id %>/unsave"
+              method="POST"
+            >
+              <button type="submit" class="btn btn-unsave" style="background-color: #dc3545; color: white; padding: 0.5rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background-color 0.2s;">Bỏ lưu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

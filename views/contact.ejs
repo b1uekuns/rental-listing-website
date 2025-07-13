@@ -1,0 +1,81 @@
+<%- include('partials/header') %>
+<div
+  class="container contact-container"
+  style="margin-top: 100px; display: flex; gap: 40px; align-items: flex-start"
+>
+  <!-- Bên trái: Giới thiệu + Thông tin liên hệ -->
+  <div
+    class="contact-left"
+    style="
+      flex: 1;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    "
+  >
+    <h2>Giới thiệu</h2>
+    <p>
+      Góc Thuê Nhà là nền tảng kết nối người thuê và chủ nhà tại Hà Nội.<br />
+      Chúng tôi cung cấp thông tin minh bạch, hỗ trợ tìm kiếm và đăng tin dễ
+      dàng.<br />
+      Mục tiêu: Giúp bạn tìm được nơi ở phù hợp một cách nhanh chóng và an toàn!
+    </p>
+    <h2 style="margin-top: 2rem">Thông tin liên hệ</h2>
+    <ul style="list-style: none; padding: 0">
+      <li>
+        📧 Email: <a href="mailto:hotro@gocnhatro.vn">hotro@gocnhatro.vn</a>
+      </li>
+      <li>📞 Điện thoại: 0123 456 789</li>
+      <li>🏢 Địa chỉ: Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội</li>
+    </ul>
+  </div>
+  <!-- Bên phải: Form liên hệ -->
+  <div
+    class="contact-right"
+    style="
+      width: 400px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+    "
+  >
+    <h2>Gửi ý kiến liên hệ</h2>
+    <% if (locals.success) { %>
+    <div class="alert alert-success"><%= locals.success %></div>
+    <% } %> <% if (locals.error) { %>
+    <div class="alert alert-danger"><%= locals.error %></div>
+    <% } %>
+    <form action="/contact" method="POST">
+      <div class="form-group">
+        <label>Họ tên</label>
+        <input
+          type="text"
+          name="name"
+          value="<%= user ? user.full_name : '' %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          name="email"
+          value="<%= user ? user.email : '' %>"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label>Chủ đề</label>
+        <input type="text" name="subject" required />
+      </div>
+      <div class="form-group">
+        <label>Nội dung</label>
+        <textarea name="message" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn">Gửi liên hệ</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/footer') %>

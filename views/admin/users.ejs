@@ -1,0 +1,50 @@
+<%- include('../partials/admin_header') %>
+
+<div class="admin-layout">
+  <%- include('../partials/admin_sidebar') %>
+
+  <div class="admin-content">
+    <h1>Quản lý người dùng</h1>
+
+    <div class="admin-content-wrapper">
+      <% if (locals.success) { %>
+      <div class="alert alert-success"><%= locals.success %></div>
+      <% } %> <% if (locals.error) { %>
+      <div class="alert alert-danger"><%= locals.error %></div>
+      <% } %>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 20%">Họ tên</th>
+              <th style="width: 25%">Email</th>
+              <th style="width: 15%">Số điện thoại</th>
+              <th style="width: 15%">Vai trò</th>
+              <th style="width: 25%">Ngày đăng ký</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.full_name || u.username %></td>
+              <td><%= u.email %></td>
+              <td><%= u.phone_number || 'Chưa cập nhật' %></td>
+              <td>
+                <% if (u.role === 'admin') { %>
+                <span class="role-badge-admin">Admin</span>
+                <% } else { %>
+                <span class="role-badge-user">Người dùng</span>
+                <% } %>
+              </td>
+              <td><%= new Date(u.created_at).toLocaleString('vi-VN') %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin_footer') %>

@@ -1,0 +1,111 @@
+<%- include('../partials/admin_header') %>
+
+<div class="admin-layout">
+  <%- include('../partials/admin_sidebar') %>
+
+  <div class="admin-content">
+    <div class="listing-detail-header">
+      <h1><%= listing.title %></h1>
+      <div class="listing-id">Mã tin: <%= listing.id %></div>
+    </div>
+
+    <div class="listing-detail-content">
+      <!-- Hình ảnh -->
+      <div class="listing-images">
+        <% if (listing.images_urls && listing.images_urls.length > 0) { %>
+        <div class="images-grid">
+          <% listing.images_urls.forEach((url, index) => { %>
+          <div class="image-item <%= index === 0 ? 'main-image' : '' %>">
+            <img src="<%= url %>" alt="Ảnh tin đăng <%= index + 1 %>" />
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <div class="no-image">
+          <img src="/images/no-image.png" alt="Không có hình ảnh" />
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Thông tin chính -->
+      <div class="listing-info">
+        <div class="info-grid">
+          <div class="info-item price-item">
+            <span class="label">Giá thuê:</span>
+            <span class="value price-value">
+              <%= Math.floor(listing.price).toLocaleString().replace(/,/g, '.')
+              %> VNĐ/tháng
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Diện tích:</span>
+            <span class="value"><%= listing.area %> m²</span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Loại hình:</span>
+            <span class="value">
+              <% if (listing.property_type === 'nha_nguyen_can') { %>Nhà nguyên
+              căn <% } else if (listing.property_type === 'can_ho') { %>Căn hộ
+              <% } else if (listing.property_type === 'phong_tro') { %>Phòng trọ
+              <% } else if (listing.property_type === 'o_ghep') { %>Ở ghép <% }
+              else { %><%= listing.property_type %> <% } %>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Địa chỉ:</span>
+            <span class="value"><%= listing.address %></span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Trạng thái:</span>
+            <span class="value">
+              <% if (listing.status === 'pending') { %>Chờ duyệt <% } else if
+              (listing.status === 'available') { %>Đã duyệt <% } else if
+              (listing.status === 'rejected') { %>Bị từ chối <% } else if
+              (listing.status === 'rented') { %>Đã cho thuê <% } %>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Lượt xem:</span>
+            <span class="value"><%= listing.view_count %></span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Người đăng:</span>
+            <span class="value">
+              <%= listing.owner_name %> -
+              <a href="tel:<%= listing.phone_number %>" class="phone-link">
+                <%= listing.phone_number %>
+              </a>
+            </span>
+          </div>
+
+          <div class="info-item">
+            <span class="label">Ngày đăng:</span>
+            <span class="value"
+              ><%= new Date(listing.created_at).toLocaleDateString('vi-VN')
+              %></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Mô tả -->
+      <div class="listing-description">
+        <h3>Mô tả chi tiết</h3>
+        <div class="description-content">
+          <% if (listing.description && listing.description.trim()) { %> <%=
+          listing.description %> <% } else { %>
+          <em style="color: var(--gray-400)">Chưa có mô tả chi tiết.</em>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin_footer') %>

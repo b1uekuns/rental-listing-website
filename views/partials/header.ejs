@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= typeof title !== 'undefined' ? title : 'Rental Website' %>
+    </title>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="main-navbar">
+        <div class="container nav-flex">
+          <a href="/" class="logo">Góc Thuê Nhà</a>
+
+          <!-- Hamburger menu button -->
+          <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <ul class="main-menu" id="mainMenu">
+            <li><a href="/">Trang chủ</a></li>
+            <li class="dropdown">
+              <a href="#">Dịch vụ <span>&#9662;</span></a>
+              <ul class="dropdown-menu">
+                <a href="/listings/create">Đăng tin</a>
+                <a href="/listings">Tất cả tin đăng</a>
+              </ul>
+            </li>
+            <li><a href="/contact">Liên hệ</a></li>
+          </ul>
+          <div class="user-actions">
+            <% if (!user) { %>
+            <a href="/auth/register" class="btn btn-secondary">Đăng ký</a>
+            <a href="/auth/login" class="btn btn-primary">Đăng nhập</a>
+            <% } else { %>
+            <span class="user-greeting"
+              >Xin chào, <%= user.full_name || user.username %></span
+            >
+            <div class="user-avatar-dropdown">
+              <img
+                src="<%= user.avatar_url || '/images/default-avatar.png' %>"
+                alt="avatar"
+                class="user-avatar"
+              />
+              <ul class="user-dropdown-menu">
+                <a href="/users/profile">Thông tin người dùng</a>
+                <a href="/users/saved">Tin đã lưu</a>
+                <a href="/users/listings ">Tin đã đăng</a>
+                <a href="/auth/logout">Thoát</a>
+              </ul>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <script>
+      // Toggle mobile menu
+      function toggleMenu() {
+        const menu = document.getElementById('mainMenu');
+        const hamburger = document.querySelector('.hamburger');
+
+        menu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+      }
+
+      // Close menu when clicking on a link (mobile)
+      document.addEventListener('DOMContentLoaded', function() {
+        const menuLinks = document.querySelectorAll('.main-menu a');
+        menuLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            if (window.innerWidth <= 800) {
+              const menu = document.getElementById('mainMenu');
+              const hamburger = document.querySelector('.hamburger');
+              menu.classList.remove('active');
+              hamburger.classList.remove('active');
+            }
+          });
+        });
+
+        // Close menu when resizing to larger screen
+        window.addEventListener('resize', function() {
+          if (window.innerWidth > 800) {
+            const menu = document.getElementById('mainMenu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.remove('active');
+            hamburger.classList.remove('active');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

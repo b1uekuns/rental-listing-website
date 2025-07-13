@@ -1,0 +1,121 @@
+/* Comments CSS - Styles for comment system */
+.comments-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comments-section h3 {
+  color: var(--primary-dark);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* Comment Form */
+.comment-form {
+  padding: 1rem;
+  background: var(--light-gray);
+  border-radius: 8px;
+}
+
+.comment-form h4 {
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.comment-textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 191, 166, 0.1);
+}
+
+.error-message {
+  color: var(--danger);
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  display: block;
+}
+
+/* Comments List */
+.comments-list {
+  margin-top: 2rem;
+}
+
+.comments-list h4 {
+  color: var(--primary-dark);
+}
+
+.comment {
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+  padding: 0.75rem 0;
+}
+
+.comment:hover {
+  background: var(--light-gray);
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+}
+
+.comment-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.comment-info {
+  flex: 1;
+}
+
+.comment-info h4 {
+  margin: 0 0 0.1rem 0;
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.rating {
+  color: #f5b301;
+  font-weight: bold;
+}
+
+.comment-content {
+  color: var(--secondary-color);
+  line-height: 1.6;
+  padding-left: 66px; /* Align with avatar */
+}
+
+.comment-date {
+  color: var(--gray);
+  font-size: 0.85rem;
+  padding-left: 66px;
+  margin-top: 0.25rem;
+}

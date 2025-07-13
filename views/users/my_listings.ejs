@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<main>
+  <div class="container" style="margin-top: 50px">
+    <h2
+      style="
+        text-align: center;
+        color: var(--primary-dark);
+        margin-bottom: 2rem; 
+      "
+    >
+      Tin đã đăng
+    </h2>
+    <% if (listings.length === 0) { %>
+    <p style="text-align: center">Bạn chưa đăng tin nào.</p>
+    <% } else { %>
+    <div class="hot-listings-grid">
+      <% listings.forEach(listing => { %>
+      <div class="hot-listing-card">
+        <% let images = []; if (Array.isArray(listing.images_urls)) { images =
+        listing.images_urls; } else { try { images =
+        JSON.parse(listing.images_urls || '[]'); } catch(e) { images = []; } }
+        %>
+        <div class="listing-image">
+          <img
+            src="<%= images[0] || '/images/no-image.png' %>"
+            alt="<%= listing.title %>"
+          />
+        </div>
+        <div class="listing-content">
+          <h3 class="listing-title">
+            <% if (listing.status === 'available') { %>
+            <a href="/listings/<%= listing.id %>"><%= listing.title %></a>
+            <% } else { %>
+            <a href="/listings/<%= listing.id %>" style="color: #888"><%= listing.title %></a>
+            <% } %>
+          </h3>
+
+          <div class="price-rating">
+            <div class="price">
+              <%= Math.round(listing.price).toLocaleString('vi-VN') %> VNĐ/tháng
+            </div>
+            <div class="view-count">
+              👁️ <%= listing.view_count || 0 %>
+            </div>
+          </div>
+
+          <div class="property-details">
+            <span class="property-type">
+              <% if (listing.property_type === 'phong_tro') { %>Phòng trọ
+              <% } else if (listing.property_type === 'nha_nguyen_can') { %>Nhà nguyên căn
+              <% } else if (listing.property_type === 'can_ho') { %>Căn hộ
+              <% } else if (listing.property_type === 'o_ghep') { %>Ở ghép
+              <% } else { %><%= listing.property_type %><% } %>
+            </span>
+            <span class="area"><%= listing.area %>m²</span>
+          </div>
+          <div class="location">
+            <span class="location-icon">📍</span>
+            <span><%= listing.district_name %></span>
+          </div>
+
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

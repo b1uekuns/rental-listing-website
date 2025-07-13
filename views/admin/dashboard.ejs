@@ -1,0 +1,35 @@
+<%- include('../partials/admin_header') %>
+
+<div class="admin-layout">
+  <%- include('../partials/admin_sidebar') %>
+
+  <div class="admin-content">
+    <h1>Dashboard</h1>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number"><%= new_listings %></span>
+        <div class="stat-label">Tin chờ duyệt</div>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-number"><%= new_users %></span>
+        <div class="stat-label">Người dùng mới hôm nay</div>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-number"><%= total_listings %></span>
+        <div class="stat-label">Tổng số tin đăng</div>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-number"><%= total_views %></span>
+        <div class="stat-label">Tổng lượt xem</div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<%- include('../partials/admin_footer') %>

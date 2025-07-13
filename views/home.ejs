@@ -1,0 +1,272 @@
+<%- include('partials/header') %>
+
+<main>
+  <!-- Hiển thị thông báo lỗi/thành công -->
+  <% if (locals.error) { %>
+  <div
+    class="alert alert-danger"
+    style="margin: 80px auto 0 auto; max-width: 1200px"
+  >
+    <%= locals.error %>
+  </div>
+  <% } %> <% if (locals.success) { %>
+  <div
+    class="alert alert-success"
+    style="margin: 80px auto 0 auto; max-width: 1200px"
+  >
+    <%= locals.success %>
+  </div>
+  <% } %>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Tìm Kiếm Nhà Cho Thuê Tại Hà Nội</h1>
+      <p class="hero-description">
+        Hàng nghìn căn hộ, phòng trọ chất lượng đang chờ bạn
+      </p>
+
+      <form action="/listings/search" method="GET" class="search-form">
+        <div class="form-group">
+          <select name="district">
+            <option value="">Chọn quận/huyện</option>
+            <% districts.forEach(district => { %>
+            <option value="<%= district.id %>"><%= district.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <select name="property_type">
+            <option value="">Loại hình</option>
+            <option value="phong_tro">Phòng trọ</option>
+            <option value="nha_nguyen_can">Nhà nguyên căn</option>
+            <option value="can_ho">Căn hộ</option>
+            <option value="o_ghep">Ở ghép</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select name="price_range">
+            <option value="">Khoảng giá</option>
+            <option value="0-2000000">Dưới 2 triệu</option>
+            <option value="2000000-5000000">2 - 5 triệu</option>
+            <option value="5000000-10000000">5 - 10 triệu</option>
+            <option value="10000000-20000000">10 - 20 triệu</option>
+            <option value="20000000-999999999">Trên 20 triệu</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input
+            type="number"
+            name="area"
+            placeholder="Diện tích (m²)"
+            min="0"
+          />
+        </div>
+        <button type="submit">Tìm kiếm</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="featured-areas">
+    <div class="container">
+      <h2>Khu Vực Nổi Bật</h2>
+      <div class="areas-grid">
+        <div class="area-card">
+          <img src="/images/cau-giay.jpg" alt="Cầu Giấy" />
+          <div class="area-info">
+            <h3>Cầu Giấy</h3>
+            <p>Khu vực sôi động, gần các trường đại học</p>
+            <a href="/listings?district=2" class="btn">Xem tin</a>
+          </div>
+        </div>
+        <div class="area-card">
+          <img src="/images/dong-da.jpg" alt="Đống Đa" />
+          <div class="area-info">
+            <h3>Đống Đa</h3>
+            <p>Trung tâm văn hóa, ẩm thực</p>
+            <a href="/listings?district=3" class="btn">Xem tin</a>
+          </div>
+        </div>
+        <div class="area-card">
+          <img src="/images/tay-ho.jpg" alt="Tây Hồ" />
+          <div class="area-info">
+            <h3>Tây Hồ</h3>
+            <p>Khu vực yên tĩnh, view đẹp</p>
+            <a href="/listings?district=8" class="btn">Xem tin</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-listings">
+    <div class="container">
+      <h2>LỰA CHỌN CHỖ Ở HOT</h2>
+      <div class="hot-listings-grid">
+        <% listings.forEach((listing) => { %> <% let images = []; if
+        (Array.isArray(listing.images_urls)) { images = listing.images_urls; }
+        else { try { images = JSON.parse(listing.images_urls || '[]'); }
+        catch(e) { images = []; } } %>
+        <div class="hot-listing-card">
+          <div class="listing-image">
+            <img
+              src="<%= images[0] || '/images/no-image.png' %>"
+              alt="<%= listing.title %>"
+            />
+          </div>
+          <div class="listing-content">
+            <h3 class="listing-title">
+              <a href="/listings/<%= listing.id %>"><%= listing.title %></a>
+            </h3>
+            <div class="price-rating">
+              <div class="price">
+                <%= Math.round(listing.price).toLocaleString('vi-VN') %> VNĐ/tháng
+              </div>
+              <div class="view-count">
+                👁️ <%= listing.view_count || 0 %>
+              </div>
+            </div>
+            <div class="property-details">
+              <span class="property-type">
+                <% if (listing.property_type === 'phong_tro') { %>Phòng trọ<% }
+                else if (listing.property_type === 'nha_nguyen_can') { %>Nhà
+                nguyên căn<% } else if (listing.property_type === 'can_ho') {
+                %>Căn hộ<% } else if (listing.property_type === 'o_ghep') { %>Ở
+                ghép<% } else { %><%= listing.property_type %><% } %>
+              </span>
+              <span class="area"><%= listing.area %>m²</span>
+            </div>
+            <div class="location">
+              <span class="location-icon">📍</span>
+              <span><%= listing.district_name %></span>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="why-choose-us">
+    <div class="container">
+      <h2>Tại Sao Chọn Chúng Tôi</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Tìm Kiếm Dễ Dàng</h3>
+          <p>Bộ lọc thông minh giúp bạn nhanh chóng tìm được nhà phù hợp</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✓</div>
+          <h3>Thông Tin Xác Thực</h3>
+          <p>Tin đăng được kiểm duyệt, đảm bảo độ tin cậy</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Hỗ Trợ 24/7</h3>
+          <p>Đội ngũ tư vấn nhiệt tình, chuyên nghiệp</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <div class="container">
+      <h2>Bạn Đang Tìm Nhà Cho Thuê?</h2>
+      <p>Đăng tin miễn phí ngay hôm nay để tiếp cận hàng nghìn người dùng</p>
+      <div class="cta-buttons">
+        <a href="/listings/create" class="btn btn-primary">Đăng tin miễn phí</a>
+        <a href="/listings" class="btn btn-secondary">Tìm nhà ngay</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Popup quảng cáo -->
+<% if (popupListing) { %> <% let popupImages = []; if
+(Array.isArray(popupListing.images_urls)) { popupImages =
+popupListing.images_urls; } else { try { popupImages =
+JSON.parse(popupListing.images_urls || '[]'); } catch(e) { popupImages = []; } }
+%>
+<div id="adPopup" class="ad-popup">
+  <div class="ad-popup-content">
+    <button class="ad-popup-close" onclick="closeAdPopup()">&times;</button>
+    <div class="ad-content">
+      <h3>🏠 Tin Đăng Nổi Bật!</h3>
+      <img
+        src="<%= popupImages[0] || '/images/no-image.png' %>"
+        alt="<%= popupListing.title %>"
+        style="
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 8px;
+          margin: 1rem 0;
+        "
+      />
+      <h4><%= popupListing.title %></h4>
+      <p class="ad-price">
+        Chỉ từ
+        <strong
+          ><%= Math.round(popupListing.price).toLocaleString('vi-VN') %>
+          VNĐ/tháng</strong
+        >
+      </p>
+      <p>
+        ✅ Diện tích: <%= popupListing.area %>m²<br />
+        ✅ Loại hình: <% if (popupListing.property_type === 'phong_tro') {
+        %>Phòng trọ<% } else if (popupListing.property_type ===
+        'nha_nguyen_can') { %>Nhà nguyên căn<% } else if
+        (popupListing.property_type === 'can_ho') { %>Căn hộ<% } else if
+        (popupListing.property_type === 'o_ghep') { %>Ở ghép<% } else { %><%=
+        popupListing.property_type %><% } %><br />
+        ✅ Khu vực: <%= popupListing.district_name %><br />
+        ✅ Lượt xem: <%= popupListing.view_count || 0 %>
+      </p>
+      <a
+        href="/listings/<%= popupListing.id %>"
+        class="btn btn-primary"
+        style="
+          width: 100%;
+          text-align: center;
+          margin-top: 1rem;
+          font-size: 1rem !important;
+        "
+        >Xem chi tiết ngay</a
+      >
+    </div>
+  </div>
+</div>
+<% } %>
+
+<script>
+  // Popup quảng cáo
+  function showAdPopup() {
+    // Kiểm tra cookie xem đã đóng popup chưa
+    if (document.cookie.indexOf("adPopupClosed=true") === -1) {
+      document.getElementById("adPopup").style.display = "flex";
+    }
+  }
+
+  function closeAdPopup() {
+    document.getElementById("adPopup").style.display = "none";
+    // Set cookie để nhớ đã đóng popup (expires sau 1 ngày)
+    const expires = new Date();
+    expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000);
+    document.cookie =
+      "adPopupClosed=true; expires=" + expires.toUTCString() + "; path=/";
+  }
+
+  // Hiển thị popup sau 1 phút (60000ms)
+  setTimeout(showAdPopup, 60000);
+
+  // Đóng popup khi click bên ngoài
+  document.getElementById("adPopup").addEventListener("click", function (e) {
+    if (e.target === this) {
+      closeAdPopup();
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

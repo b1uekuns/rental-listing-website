@@ -1,0 +1,67 @@
+
+<%- include('../partials/header') %>
+
+<main>
+  <div class="container" style="max-width: 400px; margin: 100px auto 2rem auto">
+    <h2
+      style="
+        text-align: center;
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+      "
+    >
+      Đăng nhập
+    </h2>
+
+    <!-- Hiển thị thông báo lỗi -->
+    <% if (locals.error) { %>
+    <div class="alert alert-danger" style="margin-bottom: 1rem;">
+      <%= locals.error %>
+    </div>
+    <% } %>
+
+    <!-- Hiển thị thông báo thành công -->
+    <% if (locals.success) { %>
+    <div class="alert alert-success" style="margin-bottom: 1rem;">
+      <%= locals.success %>
+    </div>
+    <% } %>
+
+    <form action="/auth/login" method="POST" class="form-auth">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+          maxlength="50"
+          placeholder="Nhập tên đăng nhập"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          minlength="6"
+          placeholder="Nhập mật khẩu"
+        />
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="width: 100%; margin-top: 1rem"
+      >
+        Đăng nhập
+      </button>
+    </form>
+    <p style="text-align: center; margin-top: 1rem">
+      Chưa có tài khoản?
+      <a href="/auth/register" style="color: var(--primary-color)">Đăng ký</a>
+    </p>
+  </div>
+</main>
+<%- include('../partials/footer') %>

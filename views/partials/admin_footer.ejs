@@ -1,0 +1,35 @@
+    <!-- Script tự động ẩn thông báo -->
+    <script>
+      // Tự động ẩn thông báo sau 3 giây
+      document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+
+        alerts.forEach(function(alert) {
+          // Thêm hiệu ứng fade in
+          alert.style.opacity = '0';
+          alert.style.transform = 'translateY(-10px)';
+          alert.style.transition = 'all 0.3s ease';
+
+          // Fade in ngay lập tức
+          setTimeout(function() {
+            alert.style.opacity = '1';
+            alert.style.transform = 'translateY(0)';
+          }, 100);
+
+          // Tự động ẩn sau 3 giây
+          setTimeout(function() {
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-10px)';
+
+            // Xóa hoàn toàn sau khi fade out
+            setTimeout(function() {
+              if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+              }
+            }, 300);
+          }, 3000);
+        });
+      });
+    </script>
+  </body>
+</html>

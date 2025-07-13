@@ -1,0 +1,30 @@
+
+/*Biến CSS, reset, typography cơ bản */
+@import url("./base.css");
+/*Header, footer, navigation, cấu trúc trang */
+@import url("./layout.css");
+/*Buttons, forms, cards, alerts*/
+@import url("./components.css");
+/*Riêng cho từng trang */
+@import url("./pages.css");
+/*Css cho trang chi tiết tin đăng */
+@import url("./listing-detail.css");
+/*Css cho hệ thống bình luận */
+@import url("./comments.css");
+/*Hiệu ứng và chuyển động */
+@import url("./animations.css");
+/*Responsive*/
+@import url("./responsive.css");
+
+*:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.btn:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}

@@ -1,0 +1,120 @@
+<%- include('../partials/header') %>
+
+<main>
+  <div class="container" style="max-width: 600px; margin: 50px auto 2rem auto">
+    <h2
+      style="
+        text-align: center;
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+      "
+    >
+      Đăng tin mới
+    </h2>
+    <% if (locals.error) { %>
+    <div class="alert alert-danger"><%= locals.error %></div>
+    <% } %> <% if (locals.success) { %>
+    <div class="alert alert-success"><%= locals.success %></div>
+    <% } %>
+    <form
+      action="/listings/create"
+      method="POST"
+      enctype="multipart/form-data"
+      class="form-auth"
+    >
+      <div class="form-group">
+        <label for="title">Tiêu đề</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          required
+          maxlength="200"
+          placeholder="Nhập tiêu đề tin đăng"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Mô tả chi tiết</label>
+        <textarea
+          id="description"
+          name="description"
+          required
+          rows="5"
+          maxlength="2000"
+          placeholder="Nhập mô tả chi tiết"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="images">Ảnh (có thể chọn nhiều ảnh)</label>
+        <input
+          type="file"
+          id="images"
+          name="images"
+          accept="image/*"
+          multiple
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="price">Giá (VNĐ/tháng)</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          required
+          min="0"
+          placeholder="Nhập giá cho thuê"
+        />
+      </div>
+      <div class="form-group">
+        <label for="area">Diện tích (m²)</label>
+        <input
+          type="number"
+          id="area"
+          name="area"
+          required
+          min="0"
+          placeholder="Nhập diện tích"
+        />
+      </div>
+      <div class="form-group">
+        <label for="address">Địa chỉ cụ thể</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          required
+          maxlength="255"
+          placeholder="Nhập địa chỉ cụ thể"
+        />
+      </div>
+      <div class="form-group">
+        <label for="district_id">Quận/Huyện</label>
+        <select id="district_id" name="district_id" required>
+          <option value="">Chọn quận/huyện</option>
+          <% districts.forEach(district => { %>
+          <option value="<%= district.id %>"><%= district.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="property_type">Loại hình</label>
+        <select id="property_type" name="property_type" required>
+          <option value="">Chọn loại hình</option>
+          <option value="phong_tro">Phòng trọ</option>
+          <option value="nha_nguyen_can">Nhà nguyên căn</option>
+          <option value="can_ho">Căn hộ</option>
+          <option value="o_ghep">Ở ghép</option>
+        </select>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="width: 100%; margin-top: 1rem"
+      >
+        Đăng tin
+      </button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

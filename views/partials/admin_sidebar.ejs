@@ -1,0 +1,70 @@
+<div class="admin-sidebar" id="adminSidebar">
+  <!-- Desktop/Tablet title -->
+  <h3 onclick="toggleSidebar()">Quản trị</h3>
+
+  <!-- Mobile hamburger button -->
+  <div class="sidebar-toggle" onclick="toggleSidebar()">
+    <span class="menu-toggle">☰</span>
+    <span>Menu</span>
+  </div>
+
+  <ul>
+    <li>
+      <a
+        href="/admin"
+        class="<%= (typeof currentPage !== 'undefined' && currentPage === 'dashboard') ? 'active' : '' %>"
+      >
+        Dashboard
+      </a>
+    </li>
+    <li>
+      <a
+        href="/admin/users"
+        class="<%= (typeof currentPage !== 'undefined' && currentPage === 'users') ? 'active' : '' %>"
+      >
+        Người dùng
+      </a>
+    </li>
+    <li>
+      <a
+        href="/admin/listings"
+        class="<%= (typeof currentPage !== 'undefined' && currentPage === 'listings') ? 'active' : '' %>"
+      >
+        Tin đăng
+      </a>
+    </li>
+    <li>
+      <a
+        href="/admin/comments"
+        class="<%= (typeof currentPage !== 'undefined' && currentPage === 'comments') ? 'active' : '' %>"
+      >
+        Bình luận
+      </a>
+    </li>
+    <li>
+      <a
+        href="/admin/contacts"
+        class="<%= (typeof currentPage !== 'undefined' && currentPage === 'contacts') ? 'active' : '' %>"
+      >
+        Liên hệ
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('adminSidebar');
+  sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById('adminSidebar');
+  const isClickInsideSidebar = sidebar.contains(event.target);
+
+  if (!isClickInsideSidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+  }
+});
+</script>

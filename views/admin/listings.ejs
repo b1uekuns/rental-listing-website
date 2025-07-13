@@ -1,0 +1,84 @@
+<%- include('../partials/admin_header') %>
+
+<div class="admin-layout">
+  <%- include('../partials/admin_sidebar') %>
+
+  <div class="admin-content">
+    <h1>Quản lý tin đăng</h1>
+
+    <div class="admin-content-wrapper">
+      <% if (locals.error) { %>
+        <div class="alert alert-danger"><%= locals.error %></div>
+      <% } %>
+      <% if (locals.success) { %>
+        <div class="alert alert-success"><%= locals.success %></div>
+      <% } %>
+
+      <form method="get" style="margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <label for="status" style="font-weight: 500; font-size: 1rem;">Lọc theo trạng thái:</label>
+          <select name="status" id="status" onchange="this.form.submit()" style="padding: 0.4rem 0.6rem; border-radius: 5px; border: 1px solid #ddd; font-size: 0.9rem;">
+            <option value="all" <%= status === 'all' ? 'selected' : '' %>>Tất cả</option>
+            <option value="pending" <%= status === 'pending' ? 'selected' : '' %>>Chờ duyệt</option>
+            <option value="available" <%= status === 'available' ? 'selected' : '' %>>Đã duyệt</option>
+            <option value="rejected" <%= status === 'rejected' ? 'selected' : '' %>>Bị từ chối</option>
+            <option value="rented" <%= status === 'rented' ? 'selected' : '' %>>Đã cho thuê</option>
+          </select>
+        </div>
+      </form>
+
+      <div class="table-container">
+        <table>
+      <thead>
+        <tr>
+          <th>Tiêu đề</th>
+          <th>Người đăng</th>
+          <th>Quận</th>
+          <th>Trạng thái</th>
+          <th>Ngày đăng</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% listings.forEach(l => { %>
+        <tr>
+          <td><a href="/admin/listings/<%= l.id %>" class="text-blue"><%= l.title %></a></td>
+          <td><%= l.full_name %></td>
+          <td><%= l.district_name %></td>
+          <td>
+            <% if (l.status === 'pending') { %>
+              <span class="status-badge-pending">Chờ duyệt</span>
+            <% } else if (l.status === 'available') { %>
+              <span class="status-badge-available">Đã duyệt</span>
+            <% } else if (l.status === 'rejected') { %>
+              <span class="status-badge-rejected">Bị từ chối</span>
+            <% } else if (l.status === 'rented') { %>
+              <span class="status-badge-rented">Đã cho thuê</span>
+            <% } %>
+          </td>
+          <td><%= new Date(l.created_at).toLocaleString('vi-VN') %></td>
+          <td>
+            <div class="flex-gap">
+              <form action="/admin/listings/<%= l.id %>/status" method="POST" class="inline-form">
+                <select name="status" onchange="this.form.submit()" style="padding: 0.3rem; border-radius: 4px; border: 1px solid #ddd; font-size: 0.8rem;">
+                  <option value="pending" <%= l.status === 'pending' ? 'selected' : '' %>>Chờ duyệt</option>
+                  <option value="available" <%= l.status === 'available' ? 'selected' : '' %>>Đã duyệt</option>
+                  <option value="rejected" <%= l.status === 'rejected' ? 'selected' : '' %>>Bị từ chối</option>
+                  <option value="rented" <%= l.status === 'rented' ? 'selected' : '' %>>Đã cho thuê</option>
+                </select>
+              </form>
+              <form action="/admin/listings/<%= l.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tin đăng này không?');">
+                <button type="submit" class="btn btn-danger btn-small">Xóa</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/admin_footer') %>
