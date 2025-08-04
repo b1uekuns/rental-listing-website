@@ -63,6 +63,7 @@ app.use(handleSessionMessages);
 app.use(express.static(path.join(__dirname, "public")));
 
 // Cấu hình các routes chính
+app.use("/api", require("./routes/api"));
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 app.use("/listings", require("./routes/listings"));
@@ -83,5 +84,5 @@ app.use((err, req, res, next) => {
 // Khởi động server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-console.log(`Server đang chạy tại http://localhost:${PORT}`);
+  console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });
