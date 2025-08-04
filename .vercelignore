@@ -8,7 +8,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .DS_Store
-sessions
-uploads
+sessions/
 database.sql
 sample_data.sql
+README.md
