@@ -28,20 +28,36 @@ app.use(
 );
 
 // Cấu hình session để lưu trạng thái đăng nhập
-app.use(
-  session({
-    store: new FileStore({
-      path: path.join(__dirname, "sessions"),
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // Session tồn tại 24 giờ
-    },
-  })
-);
+if (process.env.NODE_ENV === "production") {
+  // Production: sử dụng memory store (tạm thời)
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "fallback-secret-key",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false, // Tạm thời false cho test
+        maxAge: 24 * 60 * 60 * 1000,
+      },
+    })
+  );
+} else {
+  // Development: sử dụng file store
+  app.use(
+    session({
+      store: new FileStore({
+        path: path.join(__dirname, "sessions"),
+      }),
+      secret: process.env.SESSION_SECRET || "dev-secret-key",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000,
+      },
+    })
+  );
+}
 
 // Cấu hình template engine EJS
 app.set("view engine", "ejs");
@@ -83,6 +99,13 @@ app.use((err, req, res, next) => {
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server đang chạy tại http://localhost:${PORT}`);
-});
+
+// Export app cho Vercel
+module.exports = app;
+
+// Chỉ listen khi chạy local (không phải trên Vercel)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server đang chạy tại http://localhost:${PORT}`);
+  });
+}
