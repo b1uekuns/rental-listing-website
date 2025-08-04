@@ -1,5 +1,5 @@
-// Import app đã cấu hình
+// Main app entry point for Vercel
 const app = require("../app");
 
-// Export cho Vercel serverless function
+// Export the Express app
 module.exports = app;
