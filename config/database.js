@@ -8,6 +8,7 @@ const dbConfig = {
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "rental_db",
+  connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT || 5000),
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -32,7 +33,9 @@ const testConnection = async () => {
   }
 };
 
-// Test connection khi khởi động
-testConnection();
+// Test connection khi khởi động local; serverless production không nên probe ngay lúc cold start
+if (process.env.NODE_ENV !== "production") {
+  testConnection();
+}
 
 module.exports = pool;
