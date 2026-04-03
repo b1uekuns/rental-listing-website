@@ -6,7 +6,7 @@ const listingController = {
     try {
       const { district, property_type, price_range, area, keyword } = req.query;
 
-      let query =`
+      let query = `
                 SELECT l.*, d.name as district_name, u.full_name as owner_name
                 FROM listings l
                 JOIN districts d ON l.district_id = d.id
@@ -58,7 +58,7 @@ const listingController = {
       const [listings] = await pool.query(query, params);
 
       const [districts] = await pool.query(
-        "SELECT * FROM districts ORDER BY name"
+        "SELECT * FROM districts ORDER BY name",
       );
 
       // Xác định title dựa trên có filter hay không
@@ -82,9 +82,22 @@ const listingController = {
       });
     } catch (error) {
       console.error("Index error:", error);
-      res
-        .status(500)
-        .render("error", { title: "Lỗi", message: "Đã xảy ra lỗi" });
+      const { district, property_type, price_range, area, keyword } = req.query;
+      res.status(200).render("listings/index", {
+        title: "Danh sách tin đăng",
+        listings: [],
+        districts: [],
+        user: req.session.user,
+        searchParams: {
+          district,
+          property_type,
+          price_range,
+          area,
+          keyword,
+        },
+        error:
+          "Hệ thống đang tạm thời không kết nối được cơ sở dữ liệu. Vui lòng thử lại sau.",
+      });
     }
   },
 
@@ -92,7 +105,7 @@ const listingController = {
   showCreate: async (req, res) => {
     try {
       const [districts] = await pool.query(
-        "SELECT * FROM districts ORDER BY name"
+        "SELECT * FROM districts ORDER BY name",
       );
       res.render("listings/create", {
         title: "Đăng tin mới",
@@ -131,7 +144,7 @@ const listingController = {
           const uploadPath = path.join(
             __dirname,
             "../public/uploads",
-            file.name
+            file.name,
           );
           await file.mv(uploadPath); // Lưu file vào thư mục uploads
           images_urls.push(`/uploads/${file.name}`);
@@ -154,7 +167,7 @@ const listingController = {
           district_id,
           property_type,
           JSON.stringify(images_urls),
-        ]
+        ],
       );
 
       req.session.success = "Đăng tin thành công, đang chờ duyệt";
@@ -173,7 +186,7 @@ const listingController = {
       // Tăng lượt xem
       await pool.query(
         "UPDATE listings SET view_count = view_count + 1 WHERE id = ?",
-        [id]
+        [id],
       );
       // Lấy thông tin tin đăng
       const [listings] = await pool.query(
@@ -182,7 +195,7 @@ const listingController = {
          JOIN districts d ON l.district_id = d.id
          JOIN users u ON l.user_id = u.id
          WHERE l.id = ?`,
-        [id]
+        [id],
       );
       if (listings.length === 0) {
         return res.status(404).render("error", {
@@ -222,7 +235,7 @@ const listingController = {
          JOIN users u ON c.user_id = u.id
          WHERE c.listing_id = ?
          ORDER BY c.created_at DESC`,
-        [id]
+        [id],
       );
       res.render("listings/show", {
         title: listing.title,
@@ -283,14 +296,14 @@ const listingController = {
       // Thêm bình luận
       const [result] = await pool.query(
         "INSERT INTO comments (listing_id, user_id, content, rating) VALUES (?, ?, ?, ?)",
-        [listing_id, user_id, content, rating]
+        [listing_id, user_id, content, rating],
       );
       // Lấy lại bình luận vừa thêm theo insertId
       const [rows] = await pool.query(
         `SELECT c.*, u.full_name, u.email, u.avatar_url
          FROM comments c JOIN users u ON c.user_id = u.id
          WHERE c.id = ?`,
-        [result.insertId]
+        [result.insertId],
       );
       res.json({ success: true, comment: rows[0] });
     } catch (error) {
@@ -307,7 +320,7 @@ const listingController = {
       // Kiểm tra đã lưu chưa
       const [rows] = await pool.query(
         "SELECT * FROM saved_listings WHERE user_id = ? AND listing_id = ?",
-        [user_id, listing_id]
+        [user_id, listing_id],
       );
       if (rows.length > 0) {
         if (req.get("X-Requested-With") === "XMLHttpRequest") {
@@ -321,7 +334,7 @@ const listingController = {
       }
       await pool.query(
         "INSERT INTO saved_listings (user_id, listing_id) VALUES (?, ?)",
-        [user_id, listing_id]
+        [user_id, listing_id],
       );
       if (req.get("X-Requested-With") === "XMLHttpRequest") {
         return res.json({ success: true, message: "Đã lưu tin thành công!" });
@@ -346,7 +359,7 @@ const listingController = {
 
       await pool.query(
         "DELETE FROM saved_listings WHERE user_id = ? AND listing_id = ?",
-        [user_id, id]
+        [user_id, id],
       );
 
       req.session.success = "Đã bỏ lưu tin thành công!";

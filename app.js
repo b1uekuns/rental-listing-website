@@ -12,6 +12,9 @@ const fileUpload = require("express-fileupload");
 // Khởi tạo ứng dụng Express
 const app = express();
 
+// Vercel/Proxy: cần trust proxy để secure cookie hoạt động đúng qua HTTPS
+app.set("trust proxy", 1);
+
 // Kết nối database MySQL
 const db = require("./config/database");
 
@@ -24,7 +27,7 @@ app.use(
     limits: { fileSize: process.env.MAX_FILE_SIZE },
     useTempFiles: true,
     tempFileDir: "/tmp/",
-  })
+  }),
 );
 
 // Cấu hình session để lưu trạng thái đăng nhập
@@ -36,10 +39,11 @@ if (process.env.NODE_ENV === "production") {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false, // Tạm thời false cho test
+        secure: true,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000,
       },
-    })
+    }),
   );
 } else {
   // Development: sử dụng file store
@@ -55,7 +59,7 @@ if (process.env.NODE_ENV === "production") {
         secure: false,
         maxAge: 24 * 60 * 60 * 1000,
       },
-    })
+    }),
   );
 }
 

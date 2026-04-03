@@ -150,3 +150,35 @@ rental-website/
 npm start          # Chạy production
 npm run dev        # Chạy development với nodemon
 ```
+
+## Deploy Vercel
+
+1. Cần dùng MySQL cloud (Railway, PlanetScale, Aiven, RDS...), không dùng `localhost`.
+2. Trong Vercel Project > Settings > Environment Variables, khai báo:
+
+```bash
+NODE_ENV=production
+SESSION_SECRET=your_strong_secret
+DB_HOST=your-cloud-host
+DB_PORT=3306
+DB_USER=your-user
+DB_PASSWORD=your-password
+DB_NAME=rental_db
+DB_SSL=true
+MAX_FILE_SIZE=5242880
+```
+
+3. Deploy bằng Git hoặc CLI:
+
+```bash
+vercel
+vercel --prod
+```
+
+4. Test sau deploy:
+
+- `/api/health`
+- `/`
+- `/listings`
+
+Lưu ý: upload file local không bền vững trên serverless; production nên dùng Cloudinary/S3/R2.

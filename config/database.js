@@ -4,16 +4,18 @@ require("dotenv").config();
 // Cấu hình database pool
 const dbConfig = {
   host: process.env.DB_HOST || "localhost",
+  port: Number(process.env.DB_PORT || 3306),
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "rental_db",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true,
 };
+
+if (process.env.DB_SSL === "true") {
+  dbConfig.ssl = { rejectUnauthorized: false };
+}
 
 const pool = mysql.createPool(dbConfig);
 
