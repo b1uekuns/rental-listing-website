@@ -5,7 +5,6 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
-const FileStore = require("session-file-store")(session);
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 
@@ -47,6 +46,7 @@ if (process.env.NODE_ENV === "production") {
   );
 } else {
   // Development: sử dụng file store
+  const FileStore = require("session-file-store")(session);
   app.use(
     session({
       store: new FileStore({

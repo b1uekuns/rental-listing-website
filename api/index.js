@@ -8,6 +8,8 @@ module.exports = (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Function bootstrap failed",
+      detail:
+        error && error.message ? error.message : "Unknown bootstrap error",
     });
   }
 };
