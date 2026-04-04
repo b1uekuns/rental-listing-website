@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const pool = require("../config/database");
+const { setAuthCookie, clearAuthCookie } = require("../middleware/authToken");
 
 const authController = {
   // Hiển thị form đăng nhập
@@ -18,13 +19,13 @@ const authController = {
 
       const [users] = await pool.query(
         "SELECT * FROM users WHERE username = ?",
-        [username]
+        [username],
       );
 
       if (users.length === 0) {
         console.log("User not found:", username);
         req.session.error = "Tên đăng nhập hoặc mật khẩu không đúng!";
-        return res.redirect("/auth/login");
+        return req.session.save(() => res.redirect("/auth/login"));
       }
 
       const user = users[0];
@@ -33,20 +34,22 @@ const authController = {
       if (!match) {
         console.log("Password mismatch for user:", username);
         req.session.error = "Tên đăng nhập hoặc mật khẩu không đúng!";
-        return res.redirect("/auth/login");
+        return req.session.save(() => res.redirect("/auth/login"));
       }
 
       req.session.user = user;
+      setAuthCookie(res, user);
 
-      if (user.role === "admin") {
-        return res.redirect("/admin");
-      } else {
+      return req.session.save(() => {
+        if (user.role === "admin") {
+          return res.redirect("/admin");
+        }
         return res.redirect("/");
-      }
+      });
     } catch (error) {
       console.error("Login error:", error);
       req.session.error = "Đã xảy ra lỗi khi đăng nhập!";
-      res.redirect("/auth/login");
+      return req.session.save(() => res.redirect("/auth/login"));
     }
   },
 
@@ -73,18 +76,18 @@ const authController = {
       // Kiểm tra xác nhận mật khẩu
       if (password !== confirm_password) {
         req.session.error = "Mật khẩu xác nhận không khớp";
-        return res.redirect("/auth/register");
+        return req.session.save(() => res.redirect("/auth/register"));
       }
 
       // Kiểm tra username đã tồn tại
       const [existingUsers] = await pool.query(
         "SELECT * FROM users WHERE username = ? OR email = ?",
-        [username, email]
+        [username, email],
       );
 
       if (existingUsers.length > 0) {
         req.session.error = "Tên đăng nhập hoặc email đã tồn tại";
-        return res.redirect("/auth/register");
+        return req.session.save(() => res.redirect("/auth/register"));
       }
 
       // Mã hóa password
@@ -94,22 +97,24 @@ const authController = {
       // Tạo user mới
       await pool.query(
         "INSERT INTO users (username, email, password_hash, full_name, phone_number) VALUES (?, ?, ?, ?, ?)",
-        [username, email, password_hash, full_name, phone_number]
+        [username, email, password_hash, full_name, phone_number],
       );
 
       req.session.success = "Đăng ký thành công, vui lòng đăng nhập";
-      res.redirect("/auth/login");
+      return req.session.save(() => res.redirect("/auth/login"));
     } catch (error) {
       console.error("Register error:", error);
       req.session.error = "Đã xảy ra lỗi, vui lòng thử lại";
-      res.redirect("/auth/register");
+      return req.session.save(() => res.redirect("/auth/register"));
     }
   },
 
   // Đăng xuất
   logout: (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
+    clearAuthCookie(res);
+    req.session.destroy(() => {
+      res.redirect("/");
+    });
   },
 };
 

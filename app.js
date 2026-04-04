@@ -11,6 +11,7 @@ const path = require("path");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const { restoreUserFromAuthCookie } = require("./middleware/authToken");
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -43,7 +44,7 @@ if (process.env.NODE_ENV === "production") {
       saveUninitialized: false,
       cookie: {
         secure: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000,
       },
     }),
@@ -66,6 +67,9 @@ if (process.env.NODE_ENV === "production") {
     }),
   );
 }
+
+// Khôi phục user từ auth cookie ký số khi session store không ổn định (serverless)
+app.use(restoreUserFromAuthCookie);
 
 // Cấu hình template engine EJS
 app.set("view engine", "ejs");
