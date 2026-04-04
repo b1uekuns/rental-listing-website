@@ -1,5 +1,9 @@
-// Tải cấu hình môi trường từ file .env
-require("dotenv").config();
+// Tải cấu hình từ .env khi chạy local; trên serverless có thể không đóng gói dotenv
+try {
+  require("dotenv").config();
+} catch (err) {
+  // Bỏ qua khi dotenv không có sẵn (ví dụ môi trường production/serverless)
+}
 
 // Import các thư viện cần thiết
 const express = require("express");

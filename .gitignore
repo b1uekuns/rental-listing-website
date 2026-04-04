@@ -13,8 +13,7 @@ yarn-error.log*
 
 # Session files
 sessions/
-*.json
-!vercel.json
+sessions/*.json
 
 # Logs
 logs
