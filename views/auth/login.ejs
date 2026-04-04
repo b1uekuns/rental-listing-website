@@ -14,9 +14,9 @@
     </h2>
 
     <!-- Hiển thị thông báo lỗi -->
-    <% if (locals.error) { %>
+    <% if (locals.authError) { %>
     <div class="alert alert-danger" style="margin-bottom: 1rem;">
-      <%= locals.error %>
+      <%= locals.authError %>
     </div>
     <% } %>
 

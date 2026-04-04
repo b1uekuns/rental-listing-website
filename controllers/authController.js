@@ -24,7 +24,7 @@ const authController = {
 
       if (users.length === 0) {
         console.log("User not found:", username);
-        req.session.error = "Tên đăng nhập hoặc mật khẩu không đúng!";
+        req.session.authError = "Tên đăng nhập hoặc mật khẩu không đúng!";
         return req.session.save(() => res.redirect("/auth/login"));
       }
 
@@ -33,7 +33,7 @@ const authController = {
 
       if (!match) {
         console.log("Password mismatch for user:", username);
-        req.session.error = "Tên đăng nhập hoặc mật khẩu không đúng!";
+        req.session.authError = "Tên đăng nhập hoặc mật khẩu không đúng!";
         return req.session.save(() => res.redirect("/auth/login"));
       }
 
@@ -48,7 +48,7 @@ const authController = {
       });
     } catch (error) {
       console.error("Login error:", error);
-      req.session.error = "Đã xảy ra lỗi khi đăng nhập!";
+      req.session.authError = "Đăng nhập tạm thời gián đoạn, vui lòng thử lại.";
       return req.session.save(() => res.redirect("/auth/login"));
     }
   },
