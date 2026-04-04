@@ -103,7 +103,7 @@ Truy cập: http://localhost:3000
 
 ### Admin
 
-- **Username**: admin
+- **Username**: admin1
 - **Password**: admin123
 
 ### User Thường

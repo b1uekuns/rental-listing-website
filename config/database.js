@@ -1,5 +1,12 @@
 const mysql = require("mysql2/promise");
-require("dotenv").config();
+
+// Local only: load .env if dotenv is available. In serverless production,
+// environment variables should come from platform settings.
+try {
+  require("dotenv").config();
+} catch (err) {
+  // Ignore missing dotenv in production bundles.
+}
 
 const toPositiveInt = (value, fallback) => {
   const parsed = Number.parseInt(value, 10);
