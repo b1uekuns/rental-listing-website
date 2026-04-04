@@ -5,6 +5,20 @@ const { setAuthCookie, clearAuthCookie } = require("../middleware/authToken");
 const authController = {
   // Hiển thị form đăng nhập
   showLogin: (req, res) => {
+    if (req.query.force === "1") {
+      clearAuthCookie(res);
+      if (req.session) {
+        req.session.user = null;
+      }
+    }
+
+    if (req.session.user && req.query.force !== "1") {
+      if (req.session.user.role === "admin") {
+        return res.redirect("/admin");
+      }
+      return res.redirect("/");
+    }
+
     res.render("auth/login", {
       title: "Đăng nhập",
       user: req.session.user,
